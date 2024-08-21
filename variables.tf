@@ -49,3 +49,12 @@ variable private_subnets {
     }))
     
 }
+
+variable currency {
+    type=map(string)
+    default= {
+        "Myanmar":"Kyat"
+        "US":"Dollar"
+        "Thailand":"Baht"
+    }
+}
