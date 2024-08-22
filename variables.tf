@@ -31,7 +31,7 @@ variable "vpc_name" {
     
 # }
 variable public_subnets {
-    type= list(object({
+    type= map(object({
         cidr=string
         zone=string
         Name=string
@@ -41,7 +41,7 @@ variable public_subnets {
 }
 
 variable private_subnets {
-    type= list(object({
+    type= map(object({
         cidr=string
         zone=string
         Name=string

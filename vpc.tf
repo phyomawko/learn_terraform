@@ -47,33 +47,35 @@ resource "aws_route_table" "PMKPrivateRT" {
   }
 }
 resource "aws_subnet" "PMKPublicSubnets" {
+  for_each = var.public_subnets
   vpc_id = aws_vpc.PMKVPC.id
-  count=length(var.public_subnets)
-  availability_zone = var.public_subnets[count.index].zone
-  cidr_block = var.public_subnets[count.index].cidr
+  
+  availability_zone = each.value.zone
+  cidr_block = each.value.cidr
   map_public_ip_on_launch = true
   tags = {
-    Name=var.public_subnets[count.index].Name
+    Name=each.value.Name
   }
   
 }
 resource "aws_route_table_association" "PMKPublicRTAssociation" {
-  count=length(var.public_subnets)
-  subnet_id      = aws_subnet.PMKPublicSubnets[count.index].id
+  for_each = aws_subnet.PMKPublicSubnets
+  subnet_id      = each.value.id
   route_table_id = aws_route_table.PMKPublicRT.id
 }
 resource "aws_subnet" "PMKPrivateSubnets" {
+  for_each = var.private_subnets
   vpc_id = aws_vpc.PMKVPC.id
-  count=length(var.private_subnets)
-  availability_zone = var.private_subnets[count.index].zone
-  cidr_block = var.private_subnets[count.index].cidr
+  
+  availability_zone = each.value.zone
+  cidr_block = each.value.cidr
   tags = {
-    Name=var.private_subnets[count.index].Name
+    Name=each.value.Name
   }
   
 }
 resource "aws_route_table_association" "PMKPrivateRTAssociation" {
-  count=length(var.private_subnets)
-  subnet_id      = aws_subnet.PMKPrivateSubnets[count.index].id
+  for_each = aws_subnet.PMKPrivateSubnets
+  subnet_id      = each.value.id
   route_table_id = aws_route_table.PMKPrivateRT.id
 }
